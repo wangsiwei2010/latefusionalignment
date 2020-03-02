@@ -27,8 +27,7 @@ flag = 1;
 iter = 0;
 while flag
     for p=1:numker
-    % Rp2Hpwp = Rp2Hpwp + gamma(p)^2*Hp(:,:,p)*wp(:,:,p);
-    RpHpwp = RpHpwp + gamma(p)*(HP(:,:,p)*WP(:,:,p));
+        RpHpwp = RpHpwp + gamma(p)*(HP(:,:,p)*WP(:,:,p));
     end
     iter = iter +1;
     %the first step-- optimize H_star, given Rp,wp
@@ -37,45 +36,17 @@ while flag
     UU = RpHpwp + lambda * H0;
     [Uh,Sh,Vh] = svd(UU,'econ');
     Hstar = Uh*Vh';
-%     Hstar = zeros(num,k);
-%     for ipk =1:num
-%         [val, indx] = max(UU(ipk,:));
-%         Hstar(ipk,indx) = 1;
-%                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-%     end
+
     %the second step-- optimizing wp, given Rp,H_star equivalent to maximize(sum(2*tr(wp'*Hp'*H_star)))
     %SVD of Hp'*H_star, we will get one wp for each for_loop as follows
     for p=1:numker
         if gamma(p)>1e-4
             TP = gamma(p)*HP(:,:,p)'*(Hstar);
-%             WP0 = zeros(k);
-%             for ipk =1:k
-%                 [val, indx] = max(TP(:,ipk));
-%                 e00 = zeros(k,1);
-%                 e00(indx) =1;
-%                 WP0(:,ipk) = e00;
-%             end
-%             WP(:,:,p) = WP0;
             [Up,Sp,Vp] = svd(TP,'econ');
             WP(:,:,p) = Up*Vp';
         end  
     end
-    
-    for p=1:numker
-        if gamma(p)>1e-4
-            TP = gamma(p)*(Hstar)*WP(:,:,p)';
-%             WP0 = zeros(k);
-%             for ipk =1:k
-%                 [val, indx] = max(TP(:,ipk));
-%                 e00 = zeros(k,1);
-%                 e00(indx) =1;
-%                 WP0(:,ipk) = e00;
-%             end
-%             WP(:,:,p) = WP0;
-            [Up,Sp,Vp] = svd(TP,'econ');
-            HP(:,:,p) = Up*Vp';
-        end  
-    end    
+     
     
     
     coef = zeros(1,numker);
@@ -85,12 +56,10 @@ while flag
     end
     
     gamma = coef/norm(coef,2);
-%%    gamma = ones(numker,1)/(numker);
     
     RpHpwpnew = zeros(num,k);
     for p=1:numker
-    % Rp2Hpwp = Rp2Hpwp + gamma(p)^2*Hp(:,:,p)*wp(:,:,p);
-    RpHpwpnew = RpHpwpnew + gamma(p)*(HP(:,:,p)*WP(:,:,p));
+        RpHpwpnew = RpHpwpnew + gamma(p)*(HP(:,:,p)*WP(:,:,p));
     end
     
 
