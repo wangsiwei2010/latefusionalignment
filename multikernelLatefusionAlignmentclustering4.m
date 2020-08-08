@@ -8,7 +8,6 @@ gamma = ones(numker,1)/(numker);
 WP = zeros(k,k,numker);
 opt.disp = 0;
 
-K0 = zeros(num,num);
 for p=1:numker % m - kernels
     WP(:,:,p) = eye(k);
 end

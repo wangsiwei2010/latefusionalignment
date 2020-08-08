@@ -20,6 +20,7 @@ num = size(KH,1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 KH = kcenter(KH);
 KH = knorm(KH);
+K0 = zeros(num,num);
 
 qnorm = 2;
 
