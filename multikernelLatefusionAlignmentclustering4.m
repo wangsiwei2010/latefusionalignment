@@ -1,25 +1,18 @@
-function [Hstar,WP,gamma,obj] = multikernelLatefusionAlignmentclustering4(K,k,lambda,tau,Y)
+function [Hstar,WP,gamma,obj] = multikernelLatefusionAlignmentclustering4(HP,k,lambda,tau,Y,H0)
 
-num = size(K, 2); %the number of samples
-numker = size(K, 3); %m represents the number of kernels
+num = size(HP, 1); %the number of samples
+numker = size(HP, 3); %m represents the number of kernels
 maxIter = 100; %the number of iterations
 %construct r_p,wp
 gamma = ones(numker,1)/(numker);
-HP = zeros(num,k,numker);
 WP = zeros(k,k,numker);
 opt.disp = 0;
-KH = zeros(num,num,numker);
-KH = K;
+
 K0 = zeros(num,num);
 for p=1:numker % m - kernels
-    KH(:,:,p) = (KH(:,:,p)+KH(:,:,p)')/2;
-    K0 = K0 + (1/numker)*KH(:,:,p);
-    [Hp, ~] = eigs(KH(:,:,p), k, 'la', opt);
-    HP(:,:,p) = Hp;
     WP(:,:,p) = eye(k);
 end
 
-[H0,~] = eigs(K0, k, 'la', opt);
 RpHpwp = zeros(num,k); % k - clusters, N - samples
 
 
@@ -64,11 +57,6 @@ while flag
     
 
     obj(iter) = trace(Hstar'*RpHpwpnew + lambda * Hstar'*H0);
-    
-    res9 = myNMIACC(Hstar,Y,k);
-    acc(iter) = res9(1);
-    nmi(iter)= res9(2);
-    pur(iter) = res9(3);
     
     if (iter>2) && (abs((obj(iter-1)-obj(iter))/(obj(iter-1)))<1e-6 || iter>maxIter)
 %     if iter==maxIter
