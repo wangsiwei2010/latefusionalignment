@@ -33,7 +33,7 @@ for p=1:numker % m - kernels
     HP(:,:,p) = Hp;
 end
 
-[H0,~] = eigs(K0, k, 'la', opt);
+[H0,~] = eigs(K0, numclass, 'la', opt);
 
     
 %%---The Proposed1---%%
